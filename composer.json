@@ -1,0 +1,30 @@
+{
+    "name": "luizfabianonogueira/autocomplete",
+    "description": "Ferramenta de bsuca com base no preenchimento em tempo real",
+    "keywords": ["fomr", "autocomplete", "search", "realtime", "luizfabianonogueira", "autocomplete"],
+    "type": "library",
+    "license": "LGPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "LuizFabianoNogueira\\Autocomplete\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Luiz Fabianno Nogueira",
+            "email": "luizfabianonogueira@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.1",
+        "laravel/framework": ">=v10.0.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LuizFabianoNogueira\\Autocomplete\\AutocompleteServiceProvider"
+            ]
+        }
+    }
+}

@@ -1,0 +1,45 @@
+.ui-autocomplete {
+    position: absolute;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    padding-left: 10px;
+}
+
+/* Estilo para cada item da lista */
+.ui-autocomplete li {
+    padding: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    list-style: none;
+}
+
+/* Estilo para o item selecionado na lista */
+.ui-autocomplete .ui-state-active {
+    background-color: #007bff;
+    color: #fff;
+    padding: 3px;
+}
+
+/* Ajustes para quando o item estiver em foco */
+.ui-autocomplete .ui-menu-item:hover {
+    background-color: #007bff;
+    color: #fff;
+    padding: 3px;
+}
+
+.autocomplete-info {
+    font-size: 10px;
+    color: #721c24;
+    padding: 3px;
+    background-color: #f8d7da;
+    border: solid 1px #f5c6cb;
+    border-radius: 4px;
+    display: none;
+    margin-top: 5px;
+}
