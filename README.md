@@ -3,6 +3,12 @@
 
 # Autocompete [Select]
 
+[![Latest Stable Version](https://poser.pugx.org/luizfabianonogueira/autocomplete/v)](//packagist.org/packages/luizfabianonogueira/autocomplete)
+[![Total Downloads](https://poser.pugx.org/luizfabianonogueira/autocomplete/downloads)](//packagist.org/packages/luizfabianonogueira/autocomplete)
+[![Latest Unstable Version](https://poser.pugx.org/luizfabianonogueira/autocomplete/v/unstable)](//packagist.org/packages/luizfabianonogueira/autocomplete)
+[![License](https://poser.pugx.org/luizfabianonogueira/autocomplete/license)](//packagist.org/packages/luizfabianonogueira/autocomplete)
+
+
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=IN%20DEVELOPMENT&color=GREEN&style=for-the-badge)
 
 ## Description
