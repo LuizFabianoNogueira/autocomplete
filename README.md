@@ -146,10 +146,6 @@ Outra forma de fazer a busca é ou url aonde devemos fazer a rora e o metodo do 
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
-        params: {
-            date_start: '2024-10-01 00:00:01',
-                date_end: '2024-10-29 23:59:59'
-        }
     },
 }
 ```
@@ -176,18 +172,21 @@ Agora vamos passar parametros em nossa consulta para que possamos filtrar os dad
 ```javascript
 {
     request: {
-        dynamicModel: 'App\\Models\\User',
+        url: '/search/user' ou '{{ route('search.user') }}',
+        method: 'POST',
         take: 10,
-        where: {
-            name: 'Luiz',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
+        params: {
+            date_start: '2024-10-01 00:00:01',
+                date_end: '2024-10-29 23:59:59'
+        }
     },
 }
-`
+```
 
-
-
-
+### Configurações de texto
 ```javascript
 {
     texts:{
