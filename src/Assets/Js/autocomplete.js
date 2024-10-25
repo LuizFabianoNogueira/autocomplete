@@ -22,18 +22,16 @@ if (typeof $ !== 'undefined') {
         let valueText = (config.autocomplete && config.autocomplete.valueText) ?? null;
         let valueId = (config.autocomplete && config.autocomplete.valueId) ?? null;
         let loadingData = (config.autocomplete && config.autocomplete.loadingData) ?? 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/images/loading.gif';
-
-        let fieldDataSourceName = (config.fieldDataSourceName ?? 'name');
-        let fieldDataSourceId = (config.fieldDataSourceId ?? 'id');
-        let checkImage = (config.fieldDataSourceImage ?? false);
-
-        let afterEvent = (config.afterEvent ?? null);
-        let divFormGroup = (config.divFormGroup ?? false);
-        let params = (config.params ?? null);
-        let required = (config.required === true ? 'required="true"' : '');
-        let inputClass = (config.inputClass??'');
+        let params = (config.request && config.request.params) ?? null;
         let take = (config.request && config.request.take) ?? 10;
 
+        let fieldDataSourceName = (config.autocomplete && config.autocomplete.dataSource && config.autocomplete.dataSource.fieldName) ?? 'name';
+        let fieldDataSourceId = (config.autocomplete && config.autocomplete.dataSource && config.autocomplete.dataSource.fieldValue) ?? 'id';
+        let checkImage = (config.fieldDataSourceImage ?? false);
+        let afterEvent = (config.afterEvent ?? null);
+        let divFormGroup = (config.divFormGroup ?? false);
+        let required = (config.required === true ? 'required="true"' : '');
+        let inputClass = (config.inputClass??'');
 
         let autocomplete = $(this);
 
@@ -47,7 +45,12 @@ if (typeof $ !== 'undefined') {
         boxAutocomplete.setAttribute('class', 'form-group col-md');
 
         boxAutocomplete.append(styleLoading);
-        boxAutocomplete.append(label);
+        if(config.autocomplete && config.autocomplete.label && config.autocomplete.label.hidden === true) {
+
+        } else {
+            boxAutocomplete.append(label);
+        }
+
         boxAutocomplete.append(inputSearch);
         boxAutocomplete.append(inputID);
         boxAutocomplete.append(inputInfo);
@@ -59,18 +62,30 @@ if (typeof $ !== 'undefined') {
                 $(inputID).val('');
 
                 let dataParamsDefault = {
-                    dynamicModel:dynamicModel,
                     search: request.term,
                     take: take,
                     fields: {name: fieldDataSourceName, id: fieldDataSourceId}
                 };
-
                 let dataParams = Object.assign(dataParamsDefault, params);
+                if (dynamicModel) {
+                    dataParams = Object.assign(dataParams, {dynamicModel:dynamicModel});
+                }
+
+                let method = 'GET';
+                if(config.request && config.request.method && config.request.method === 'POST') {
+                    method = config.request.method;
+                }
+
+                let headers = {};
+                if (config.request && config.request.headers) {
+                    headers = config.request.headers;
+                }
+
                 $.ajax({
                     url: url,
-                    type: 'get',
+                    type: method,
                     dataType: "json",
-                    headers: {},
+                    headers: headers,
                     data: dataParams,
                     success: function(dataResult) {
                         $(inputInfo).fadeOut();

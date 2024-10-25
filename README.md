@@ -100,12 +100,28 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
     autocomplete: {
         alias:'userDynamic',
         loadingData: '/assets/img/loading.gif',
+        valueId: '',
+        valueText: '',
+        label:{
+            hidden: true,
+        },
+        dataSource:{
+            fieldName: 'name',
+                fieldValue: 'id'
+        }
     },
 }
 ```
 -**autocomplete:** é o objeto que contem as configurações do componente.
-- **alias:** é o nome do componente que você esta criando, ele é obrigatório e deve ser unico para cada componente.
-- **loadingData:** é a imagem que vai aparecer enquanto o componente esta carregando os dados. vc pode indicar uma url interna ou externa de um gif.
+- **alias:** *obrigatório* - é o nome do componente que você esta criando, deve ser unico para cada componente.
+- **loadingData:** *opcional* é a imagem que vai aparecer enquanto o componente esta carregando os dados. vc pode indicar uma url interna ou externa de um gif.
+- **valueId:** *opcional* é o valor a ser carregado ao inicializar.
+- **valueText:** *opcional* é o texto a ser carregado ao inicializar.
+- **label:** *opcional* é o objeto que contem as configurações do label.
+- **hidden:** *opcional* é um booleano que indica se o label deve ser oculto ou não.
+- **dataSource:** *opcional* é o objeto que contem as configurações dos campos de dados.
+- **fieldName:** *opcional* é o nome do campo no banco de dados que vai resultar a lista na.
+- **fieldValue:** *opcional* é o nome do campo no banco que vai ser retornado como valor de ID.
 
 ```javascript
 {
@@ -118,17 +134,34 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
 - **request:** é o objeto que contem as configurações de busca dos dados.
 - **dynamicModel:** é o nome do model que você deseja buscar os dados. (Não esqueça de adicionar o trait `AutocompleteTrait` no model).
 por padrão a busca é feita no campo `name` e `id` do model, mas você pode alterar isso como nos exeplos abaixo.
-- **take:** é a quantidade de dados que você deseja buscar por vez.
+- **take:** *opcional* é a quantidade de dados que você deseja buscar por vez. por padrão é 10.
 
 Outra forma de fazer a busca é ou url aonde devemos fazer a rora e o metodo do controller.
 ```javascript
 {
     request: {
         url: '/search/user' ou '{{ route('search.user') }}',
+        method: 'POST',
         take: 10,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        params: {
+            date_start: '2024-10-01 00:00:01',
+                date_end: '2024-10-29 23:59:59'
+        }
     },
 }
 ```
+Quando utilizamos a busca por url o componente pode receber novas configurações;
+
+- **method:** *opcional* é o metodo http que deve ser utilizado na busca, por padrão é GET.
+- **headers:** *opcional* é o objeto que contem os cabeçalhos que devem ser enviados na requisição.
+Nesse campo vc pode passar todos os cabeçalhos que desejar, como token de autenticação, token csrf, etc.
+- **params:** *opcional* é o objeto que contem os parametros que devem ser enviados na requisição.
+Para que a busca funcione com os parametros você deve criar um scope no model que vai receber os parametros.
+
+  
 Para que a busca funcione você deve criar um controller com o metodo de busca e retornar um json com os dados.
 ```php
 public function autocompleteUsers(Request $request): JsonResponse
@@ -139,6 +172,18 @@ public function autocompleteUsers(Request $request): JsonResponse
 Perceba que a consulta da controler tem um metodo `autocomplete()` que é um scope que deve ser adicionado no model.
 A consulta é simples e limpa, você pode adicionar mais filtros e ordenações conforme sua necessidade.
 
+Agora vamos passar parametros em nossa consulta para que possamos filtrar os dados.
+```javascript
+{
+    request: {
+        dynamicModel: 'App\\Models\\User',
+        take: 10,
+        where: {
+            name: 'Luiz',
+        },
+    },
+}
+`
 
 
 
