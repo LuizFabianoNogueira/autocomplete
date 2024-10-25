@@ -10,8 +10,8 @@ class AutocompleteServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/Routes/autocomplete.php');
 
-        $this->publishes([
-            __DIR__.'/Config/autocomplete.php' => config_path(),
-        ], 'autocomplete-laravel-config');
+//        $this->publishes([
+//            __DIR__.'/Config/autocomplete.php' => config_path(),
+//        ], 'autocomplete-laravel-config');
     }
 }
