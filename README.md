@@ -111,7 +111,31 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
 ```
 - **request:** é o objeto que contem as configurações de busca dos dados.
 - **dynamicModel:** é o nome do model que você deseja buscar os dados. (Não esqueça de adicionar o trait `AutocompleteTrait` no model).
+por padrão a busca é feita no campo `name` e `id` do model, mas você pode alterar isso como nos exeplos abaixo.
 - **take:** é a quantidade de dados que você deseja buscar por vez.
+
+Outra forma de fazer a busca é ou url aonde devemos fazer a rora e o metodo do controller.
+```javascript
+{
+    request: {
+        url: '/search/user' ou '{{ route('search.user') }}',
+        take: 10,
+    },
+}
+```
+Para que a busca funcione você deve criar um controller com o metodo de busca e retornar um json com os dados.
+```php
+public function autocompleteUsers(Request $request): JsonResponse
+{
+    return response()->json(Users::autocomplete()->get());
+}
+```
+Perceba que a consulta da controler tem um metodo `autocomplete()` que é um scope que deve ser adicionado no model.
+A consulta é simples e limpa, você pode adicionar mais filtros e ordenações conforme sua necessidade.
+
+
+
+
 
 ```javascript
 {
