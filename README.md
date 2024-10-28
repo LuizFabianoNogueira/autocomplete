@@ -11,13 +11,13 @@
 
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=IN%20DEVELOPMENT&color=GREEN&style=for-the-badge)
 
-## Description
+## Descrição
 Ferramenta de seleção (select) com buscar de dados em tempo real por preenchimento.
 Com essa gerrementa você pode buscar os dados aos poucos confome vai digitando no campo de busca.
 Isso agiliza a busca de dados em listas muito grandes.
 A busca é feita no banco de dados, então você pode buscar por qualquer campo da tabela podento ate mesmo utilizar dois ou mais campos de referencia.
 
-## Installation
+## Instalação
 
 Baixe o pacote via composer:
 ```bash
@@ -33,7 +33,7 @@ Adicone o provider em bootstrap/providers.php:
 ]
 ```
 
-## Usage
+## Utilização
 
 Na sua model adicione o trait `AutocompleteTrait`:
 ```php
@@ -46,13 +46,12 @@ class User extends Model
 }
 ```
 
-No eu layout adicione o css e o js utilizando as rotas a baixo:
+No aquivo layout adicione o css e o js utilizando as rotas a baixo:
 ```html
 <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
 <link rel="stylesheet" href="{{ route('autocomplete.css') }}">
 <script src="{{ route('autocomplete.js') }}"></script>
 ```
-
 
 Pronto com apenas isso você já pode utilizar o recurso de busca em tempo real no modo dinamico
 
@@ -107,7 +106,13 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
         },
         dataSource:{
             fieldName: 'name',
-                fieldValue: 'id'
+            fieldValue: 'id'
+        },
+        image:{
+            show: true,
+            width: 36,
+            height: 36,
+            field: 'image'
         }
     },
 }
@@ -122,6 +127,11 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
 - **dataSource:** *opcional* é o objeto que contem as configurações dos campos de dados.
 - **fieldName:** *opcional* é o nome do campo no banco de dados que vai resultar a lista na.
 - **fieldValue:** *opcional* é o nome do campo no banco que vai ser retornado como valor de ID.
+- **image:** *opcional* é o objeto que contem as configurações da imagem.
+- **show:** *opcional* é um booleano que indica se a imagem deve ser exibida ou não.
+- **width:** *opcional* é a largura da imagem.
+- **height:** *opcional* é a altura da imagem.
+- **field:** *opcional* é o nome do campo no banco de dados que contem o caminho da imagem. default é 'image'.
 
 ```javascript
 {

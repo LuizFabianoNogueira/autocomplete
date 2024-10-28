@@ -45,6 +45,13 @@ trait AutocompleteTrait
             DB::raw("$id as id"),
             DB::raw("$name as label")
         ];
+        if(!empty($data['imageField'])) {
+            $image = $data['imageField'];
+            if ($hasTable) {
+                $image = "$table.$image";
+            }
+            $fields[] = DB::raw("$image as image");
+        }
         $query->select($fields);
 
         #define orderBy

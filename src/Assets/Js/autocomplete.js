@@ -27,7 +27,7 @@ if (typeof $ !== 'undefined') {
 
         let fieldDataSourceName = (config.autocomplete && config.autocomplete.dataSource && config.autocomplete.dataSource.fieldName) ?? 'name';
         let fieldDataSourceId = (config.autocomplete && config.autocomplete.dataSource && config.autocomplete.dataSource.fieldValue) ?? 'id';
-        let checkImage = (config.fieldDataSourceImage ?? false);
+        let image = (config.autocomplete && config.autocomplete.image) ?? false;
         let afterEvent = (config.afterEvent ?? null);
         let divFormGroup = (config.divFormGroup ?? false);
         let required = (config.required === true ? 'required="true"' : '');
@@ -70,6 +70,9 @@ if (typeof $ !== 'undefined') {
                 if (dynamicModel) {
                     dataParams = Object.assign(dataParams, {dynamicModel:dynamicModel});
                 }
+                if(image && image.show === true) {
+                    dataParams = Object.assign(dataParams, {imageField:(image.field??'image')});
+                }
 
                 let method = 'GET';
                 if(config.request && config.request.method && config.request.method === 'POST') {
@@ -92,7 +95,6 @@ if (typeof $ !== 'undefined') {
                         if (dataResult.length <=0) {
                             $(inputInfo).html((config.texts && config.texts.noResults) ?? 'No Results');
                             $(inputInfo).fadeIn();
-                            //$(inputSearch).val('');
                             $(inputID).val('');
                         }
                         response(dataResult);
@@ -119,28 +121,34 @@ if (typeof $ !== 'undefined') {
                     $(inputSearch).val('');
                 }
             },
+            create: function() {
+                $(this).data('ui-autocomplete')._renderItem  = function (ul, item) {
+                    let li = document.createElement('li');
+                    li.setAttribute('style', 'padding: 2px;');
+                    li.setAttribute('data-item.autocomplete', item);
+                    let div = document.createElement('div');
+
+                    if (image && image.show === true) {
+                        let img = $(this).noImage()
+                        if(item.image) {
+                            img = document.createElement('img');
+                            img.setAttribute('style', 'width: '+(image.width??24)+'px;');
+                            img.setAttribute('height', (image.height??24)+'px');
+                            img.setAttribute('src', item.image);
+                        }
+                        div.append(img);
+                        div.append(item.label)
+
+                    } else {
+                        div.append(item.label);
+                    }
+
+                    li.append(div);
+                    return $(li).appendTo( ul );
+                };
+            },
             minLength: 2
-        })._renderItem = function(ul, item) {
-            if (checkImage) {
-                let img = '<img style="width: 50px;" src="'+noImageData+'">';
-                if(item.image) {
-                    img = '<img style="width: 50px;" src="'+item.image.public_route+'" />'
-                }
-                return $("<li></li>")
-                    .data("item.autocomplete", item)
-                    .append('<div>'+img+' '+item.label+'</div>')
-                    .appendTo(ul);
-            }
-            let li = document.createElement('li');
-            li.setAttribute('style', 'padding: 2px;');
-            li.setAttribute('data-item.autocomplete', item);
-
-            let div = document.createElement('div');
-            div.append(item.label);
-            li.append(div);
-            ul.append(li);
-
-        };
+        })
     };
 
     $.fn.label = function (alias, labelText){
@@ -191,6 +199,26 @@ if (typeof $ !== 'undefined') {
         objInfo.fadeIn();
         $('#'+name+'_name').val('');
         $('#'+name+'_id').val('');
+    };
+
+    $.fn.noImage = function (){
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("width", "24px");
+        svg.setAttribute("height", "24px");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+        const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path1.setAttribute("d", "M7.828 5l-1-1H22v15.172l-1-1v-.69l-3.116-3.117-.395.296-.714-.714.854-.64a.503.503 0 0 1 .657.046L21 16.067V5zM3 20v-.519l2.947-2.947a1.506 1.506 0 0 0 .677.163 1.403 1.403 0 0 0 .997-.415l2.916-2.916-.706-.707-2.916 2.916a.474.474 0 0 1-.678-.048.503.503 0 0 0-.704.007L3 18.067V5.828l-1-1V21h16.172l-1-1zM17 8.5A1.5 1.5 0 1 1 15.5 7 1.5 1.5 0 0 1 17 8.5zm-1 0a.5.5 0 1 0-.5.5.5.5 0 0 0 .5-.5zm5.646 13.854l.707-.707-20-20-.707.707z");
+
+        const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path2.setAttribute("fill", "none");
+        path2.setAttribute("d", "M0 0h24v24H0z");
+
+        svg.appendChild(path1);
+        svg.appendChild(path2);
+
+        return svg;
     };
 })(jQuery);
 
