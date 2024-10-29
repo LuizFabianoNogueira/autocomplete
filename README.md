@@ -45,6 +45,13 @@ class User extends Model
     ...
 }
 ```
+Ainda em sua model devemos gerar uma varivel responsavel por indicar qual campo deve ser buscado.
+```php
+    protected $autocomplete_search_fields = ['name', 'email'];
+```
+Nesse campo você deve passar um array com os campos que deseja buscar.
+Observe que utilizamos mais de um campo de busca no exemplo acima.
+Você pode adicionar quantos campos desejar.
 
 No aquivo layout adicione o css e o js utilizando as rotas a baixo:
 ```html
@@ -53,33 +60,42 @@ No aquivo layout adicione o css e o js utilizando as rotas a baixo:
 <script src="{{ route('autocomplete.js') }}"></script>
 ```
 
-Pronto com apenas isso você já pode utilizar o recurso de busca em tempo real no modo dinamico
+Pronto com apenas isso você já pode utilizar o recurso de busca em tempo real no modo dinamico.
 
-veja abaixa um exemplo de como utilizar o recurso:
+Veja abaixa um exemplo de como utilizar o recurso:
 
-No local onde deseja adicionar um id de identificação
+No local onde deseja adicionar um id de identificação.
 ```html
 <div id="autocomplete"></div>
 ```
+Para adicionar o recurso de busca em tempo real você deve adicionar o codigo de chamada do recurso.
+```javascript
+let configuracao = {... ...};
+$("#box-autocomplete-um").loadAutocompleteLaravel(configuracao);
+```
+Em `configuracao` você deve passar um objeto com as configurações do recurso. \
+Em `#box-autocomplete-um` você deve passar o id do elemento que vai receber o recurso.
 
 Logo em seguida adicione o script de configuração do recurso
 ```javascript
+let configuracao = {
+    autocomplete: {
+        alias:'userDynamic',
+        loadingData: '/assets/img/loading.gif',
+    },
+    request: {
+        dynamicModel: 'App\\Models\\User',
+        take: 10,
+    },
+    texts:{
+        placeholder: 'Pesquise aqui...',
+        noResults: 'Nenhum resultado encontrado',
+        label: 'Usuário',
+    }
+};
+
 $(document).ready(function(){
-    $("#box-autocomplete-um").loadAutocompleteLaravel({
-        autocomplete: {
-            alias:'userDynamic',
-            loadingData: '/assets/img/loading.gif',
-        },
-        request: {
-            dynamicModel: 'App\\Models\\User',
-            take: 10,
-        },
-        texts:{
-            placeholder: 'Pesquise aqui...',
-            noResults: 'Nenhum resultado encontrado',
-            label: 'Usuário',
-        }
-    });
+    $("#box-autocomplete-um").loadAutocompleteLaravel(configuracao);
 });
 ```
 ![basic1.png](src%2FAssets%2Fimg%2Fbasic1.png)
@@ -88,14 +104,15 @@ Agora vamos ver todos os detalhes de como configurar o recurso e ver todo seu po
 
 No exemplo acima podemos ver uma chamada de jquery que monta o compnente 
 ```javascript
-$("#box-autocomplete-um").loadAutocompleteLaravel();
+let configuracao = {... ...};
+$("#box-autocomplete-um").loadAutocompleteLaravel(configuracao);
 ```
 Para isso devemos identificar como seletor quem vai receber o componente "#box-autocomplete-um" no exemplo que é o id de uma div.
 Não precisa criar inputs pois o componente ja faz isso para você.
 
 Para que o componente funcione corretamente você deve passar um objeto de configuração. Vamos ver o que cada parametro faz.
 ```javascript
-{
+let configuracao = {
     autocomplete: {
         alias:'userDynamic',
         loadingData: '/assets/img/loading.gif',
@@ -107,15 +124,9 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
         dataSource:{
             fieldName: 'name',
             fieldValue: 'id'
-        },
-        image:{
-            show: true,
-            width: 36,
-            height: 36,
-            field: 'image'
         }
     },
-}
+};
 ```
 -**autocomplete:** é o objeto que contem as configurações do componente.
 - **alias:** *obrigatório* - é o nome do componente que você esta criando, deve ser unico para cada componente.
@@ -127,11 +138,6 @@ Para que o componente funcione corretamente você deve passar um objeto de confi
 - **dataSource:** *opcional* é o objeto que contem as configurações dos campos de dados.
 - **fieldName:** *opcional* é o nome do campo no banco de dados que vai resultar a lista na.
 - **fieldValue:** *opcional* é o nome do campo no banco que vai ser retornado como valor de ID.
-- **image:** *opcional* é o objeto que contem as configurações da imagem.
-- **show:** *opcional* é um booleano que indica se a imagem deve ser exibida ou não.
-- **width:** *opcional* é a largura da imagem.
-- **height:** *opcional* é a altura da imagem.
-- **field:** *opcional* é o nome do campo no banco de dados que contem o caminho da imagem. default é 'image'.
 
 ```javascript
 {
@@ -167,6 +173,40 @@ Nesse campo vc pode passar todos os cabeçalhos que desejar, como token de auten
 - **params:** *opcional* é o objeto que contem os parametros que devem ser enviados na requisição.
 Para que a busca funcione com os parametros você deve criar um scope no model que vai receber os parametros.
 
+### Lista com imagem
+Para adicionar uma imagem a lista de resultados você deve adicionar a configuração abaixo.
+
+```javascript
+let configuracao = {
+    autocomplete: {
+        alias:'userDynamic',
+        loadingData: '/assets/img/loading.gif',
+        valueId: '',
+        valueText: '',
+        label:{
+            hidden: true,
+        },
+        dataSource:{
+            fieldName: 'name',
+            fieldValue: 'id'
+        },
+        image:{
+            show: true,
+            width: 36,
+            height: 36,
+            field: 'image'
+        }
+    },
+};
+```
+
+- **image:** *opcional* é o objeto que contem as configurações da imagem.
+- **show:** *opcional* é um booleano que indica se a imagem deve ser exibida ou não.
+- **width:** *opcional* é a largura da imagem.
+- **height:** *opcional* é a altura da imagem.
+- **field:** *opcional* é o nome do campo no banco de dados que contem o caminho da imagem. default é 'image'.
+
+![img.png](src%2FAssets%2Fimg%2Fimg.png)
   
 Para que a busca funcione você deve criar um controller com o metodo de busca e retornar um json com os dados.
 ```php

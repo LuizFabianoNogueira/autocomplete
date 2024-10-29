@@ -41,6 +41,8 @@ if (typeof $ !== 'undefined') {
         let inputID = $(this).inputID(alias, name, valueId);
         let inputInfo = $(this).inputInfo(alias);
 
+        let multipleData = {};
+
         let boxAutocomplete = document.createElement('div');
         boxAutocomplete.setAttribute('class', 'form-group col-md');
 
@@ -54,6 +56,13 @@ if (typeof $ !== 'undefined') {
         boxAutocomplete.append(inputSearch);
         boxAutocomplete.append(inputID);
         boxAutocomplete.append(inputInfo);
+
+        if (config.autocomplete && config.autocomplete.multiple === true) {
+            let boxMultiple = document.createElement('div');
+            boxMultiple.setAttribute('class', 'box-autocomplete-multiple');
+            boxMultiple.setAttribute('id', 'box-autocomplete-multiple');
+            boxAutocomplete.append(boxMultiple);
+        }
 
         autocomplete.append(boxAutocomplete);
 
@@ -112,6 +121,34 @@ if (typeof $ !== 'undefined') {
                 $(inputID).val(ui.item.id);
                 if (afterEvent) {
                     eval(afterEvent + "(ui.item.id, ui.item.label);");
+                }
+
+                if(config.autocomplete && config.autocomplete.multiple === true) {
+
+                    if(ui.item.id in multipleData) {
+
+                    } else {
+                        multipleData = Object.assign(multipleData, {id: ui.item.id, label: ui.item.label});
+                        let div = document.createElement('div');
+                        div.setAttribute('class', 'box-multiple');
+                        div.append(ui.item.label);
+                        let a = document.createElement('a');
+                        a.setAttribute('href', '#');
+                        a.setAttribute('style', 'float:right;')
+                        a.setAttribute('class', 'remove-multiple');
+                        a.setAttribute('data-id', ui.item.id);
+                        a.onclick = function () {
+                            delete multipleData[ui.item.id];
+                            div.remove();
+                            $(inputSearch).val('');
+                            $(inputID).val(Object.values(multipleData).map(item => item.id).join(','));
+                        };
+                        a.append('X');
+                        div.append(a);
+                        $("#box-autocomplete-multiple").append(div);
+                        $(inputSearch).val('');
+                        $(inputID).val(Object.values(multipleData).map(item => item.id).join(','));
+                    }
                 }
                 return false;
             },
